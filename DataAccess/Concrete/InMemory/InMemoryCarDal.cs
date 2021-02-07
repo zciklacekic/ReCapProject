@@ -1,20 +1,22 @@
 ﻿using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace DataAccess.Concrete.InMemory
 {
-    public class InMemoryProductDal : IProductDal2
+    public class InMemoryCarDal : ICarDal
     {
         List<Car> _cars;
         List<Color> _colors;
         List<Brand> _brands;
-        List<CarWCB> _carWCBs;
+        List<CarDetailDto> _carDetailDtos;
 
-        public InMemoryProductDal()
+        public InMemoryCarDal()
         {
             _cars = new List<Car> { 
             new Car{Id=1,BrandId=1,ColorId=1,DailyPrice=300,ModelYear=2019,Name="Symbol"},
@@ -35,21 +37,19 @@ namespace DataAccess.Concrete.InMemory
             new Brand{Id=2,Name="Audi"},
             new Brand{Id=3,Name="Mercedes"}
             };
-            _carWCBs = (from c in _cars
-                        join b in _brands
-                        on c.BrandId equals b.Id
-                        join co in _colors
-                        on c.ColorId equals co.Id
-                        select new CarWCB { Id=c.Id, 
-                                            ColorId= c.ColorId, 
-                                            BrandId= c.BrandId,
-                                            DailyPrice= c.DailyPrice,
-                                            ModelYear= c.ModelYear,
-                                            Name = c.Name,
-                                            BrandName= b.Name,
-                                            ColorName = co.Name
-                                            }
-                        ).ToList();
+            _carDetailDtos = (from c in _cars
+                            join b in _brands
+                            on c.BrandId equals b.Id
+                            join co in _colors
+                            on c.ColorId equals co.Id
+                            select new CarDetailDto 
+                                { CarId=c.Id, 
+                                  DailyPrice= c.DailyPrice,
+                                  CarName = c.Name,
+                                  BrandName= b.Name,
+                                  ColorName = co.Name
+                                 }
+                            ).ToList();
         }
         
 
@@ -63,20 +63,19 @@ namespace DataAccess.Concrete.InMemory
             Car carToDelete = _cars.SingleOrDefault(c => c.Id == car.Id);
             _cars.Remove(carToDelete);
         }
-
+        
         public List<Car> GetAll()
         {
             return _cars;
         }
 
-        public List<CarWCB> GetAllProducts()
-        {
-            return _carWCBs;
-        }
-
         public List<Car> GetById(int carId)
         {
             return _cars.Where(c=> c.Id==carId).ToList();
+        }
+        public List<Car> GetAllByBrandId(int brandId)
+        {
+            return _cars.Where(p => p.BrandId == brandId).ToList();
         }
 
         public void Update(Car car)
@@ -89,9 +88,19 @@ namespace DataAccess.Concrete.InMemory
             carToUpdate.Name = car.Name;
         }
 
-        List<Car> IProductDal2.GetById(int carId)
+        public List<CarDetailDto> GetCarDetails()
         {
-            return _cars.Where(c => c.Id == carId).ToList();
+                return _carDetailDtos;     
+        }
+
+        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
+        {
+            return _cars;
+        }
+
+        public Car Get(Expression<Func<Car, bool>> filter)
+        {
+            throw new NotImplementedException();
         }
     }
 }

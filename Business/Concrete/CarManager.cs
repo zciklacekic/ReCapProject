@@ -1,13 +1,14 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Business.Concrete
 {
-    public class CarManager : IEntityService<Car>
+    public class CarManager : ICarService
     {
 
         ICarDal _carDal;
@@ -33,10 +34,7 @@ namespace Business.Concrete
 
         public List<Car> GetAll()
         {
-            //Is Kodları
-            //Yetki ve is kontrolleri yapıldıktan sonra aşağıdaki kodlar çalışacak
-
-            return _carDal.GetAll();
+             return _carDal.GetAll();
         }
 
         public List<Car> GetCarsByBrandId(int id)
@@ -57,6 +55,11 @@ namespace Business.Concrete
         public void Update(Car car)
         {
             _carDal.Update(car);
+        }
+
+        public List<CarDetailDto> GetCarDetails()
+        {
+            return _carDal.GetCarDetails();
         }
     }
 }

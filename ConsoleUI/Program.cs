@@ -31,7 +31,7 @@ namespace ConsoleUI
             //productManager.PrintAll(productManager.GetById(1));
             //productManager.PrintAllProducts(productManager.GetAllProducts());
             Console.WriteLine("-------------EFramework with Database Dal-----------------------");
-            CarManager carManager = new CarManager(new EfCarDal2());
+            CarManager carManager = new CarManager(new EfCarDal());
             //Car _car = new Car { Id = 1, BrandId = 1, ColorId = 1, DailyPrice = 300, ModelYear = 2019, Name = "Symbol" };
             //productManager.Add(_car);
 
@@ -76,13 +76,13 @@ namespace ConsoleUI
             // ----------------------------------------Color And Brand Creation-----------------------------------------
 
             //foreach (var product in productManager.GetAll())
-            Console.WriteLine("Writing the cars with color --------------------" + new ColorManager(new EfColorDal2()).GetById(3).Name);
+            Console.WriteLine("Writing the cars with color --------------------" + new ColorManager(new EfColorDal()).GetById(3).Name);
             foreach (var car in carManager.GetCarsByColorId(3))
             //foreach (var product in productManager.GetByUnitPrice(40,100))
             {
                 Console.WriteLine(car.Name);
             }
-            Console.WriteLine("Writing the cars with brand --------------------" + new BrandManager(new EfBrandDal2()).GetById(2).Name);
+            Console.WriteLine("Writing the cars with brand --------------------" + new BrandManager(new EfBrandDal()).GetById(2).Name);
             foreach (var car in carManager.GetCarsByBrandId(2))
             //foreach (var product in productManager.GetByUnitPrice(40,100))
             {
