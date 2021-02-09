@@ -2,6 +2,7 @@
 using DataAccess.Concrete.EntityFrameWork;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 
@@ -11,29 +12,21 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("-------------InMemory Product Dal-----------------------");
-            //ProductManager productManager = new ProductManager(new InMemoryProductDal());
+            //InMemoryGetTest();
+            //InMemoryAddTest();
+            //InMemoryGetByIdTest();
+            //InMemoryUpdateTest();
+            //InMemoryDeleteTest();
+            //InMemoryGetDetailsTest();
 
-            //Car car = new Car { Id = 7, BrandId = 2, ColorId = 2, DailyPrice = 500, ModelYear = 2018, Name = "A4" };
-            //productManager.Add(car);
 
-            //productManager.PrintAll(productManager.GetAll());
+            //EfGetTest();
+            //EfAddTest();
+            //EfUpdateTest();
+            //EfGetByIdTest();
+            //EfDeleteTest();
+            //EfGetDetailsTest();
 
-            //car.DailyPrice = 699;
-            //productManager.Update(car);
-
-            //productManager.PrintAll(productManager.GetAll());
-            
-
-            //productManager.Delete(car);
-            //productManager.PrintAll(productManager.GetAll());
-            //Console.WriteLine("-------Cars with ID of 1-----------");
-            //productManager.PrintAll(productManager.GetById(1));
-            //productManager.PrintAllProducts(productManager.GetAllProducts());
-            Console.WriteLine("-------------EFramework with Database Dal-----------------------");
-            CarManager carManager = new CarManager(new EfCarDal());
-            //Car _car = new Car { Id = 1, BrandId = 1, ColorId = 1, DailyPrice = 300, ModelYear = 2019, Name = "Symbol" };
-            //productManager.Add(_car);
 
             // ----------------------------------------Car Creation-------------------------------------------------
             //List<Car> cars = new List<Car> {
@@ -44,7 +37,7 @@ namespace ConsoleUI
             //new Car { Id = 5, BrandId = 3, ColorId = 1, DailyPrice = 700, ModelYear = 2020, Name = "E200" },
             //new Car { Id = 6, BrandId = 3, ColorId = 3, DailyPrice = 1000, ModelYear = 2020, Name = "S500" },
             //};
-            //CarManager carManager = new CarManager(new EfCarDal2());
+            //CarManager carManager = new CarManager(new EfCarDal());
             //foreach (var car in cars)
             //{
             //    carManager.Add(car);
@@ -58,7 +51,7 @@ namespace ConsoleUI
             //    new Color {Id=2,Name="Gray"},
             //    new Color {Id=3,Name="NavyBlue"}
             //};
-            //ColorManager colorManager = new ColorManager(new EfColorDal2());
+            //ColorManager colorManager = new ColorManager(new EfColorDal());
             //foreach (var color in colors)
             //    {
             //        colorManager.Add(color);
@@ -68,28 +61,156 @@ namespace ConsoleUI
             //new Brand{Id=2,Name="Audi"},
             //new Brand{Id=3,Name="Mercedes"}
             //};
-            //BrandManager brandManager = new BrandManager(new EfBrandDal2());
+            //BrandManager brandManager = new BrandManager(new EfBrandDal());
             //foreach (var brand in brands)
             //{
             //    brandManager.Add(brand);
             //}
             // ----------------------------------------Color And Brand Creation-----------------------------------------
+            //Change Add to Delete or Update to delete or update color and brands
 
-            //foreach (var product in productManager.GetAll())
-            Console.WriteLine("Writing the cars with color --------------------" + new ColorManager(new EfColorDal()).GetById(3).Name);
-            foreach (var car in carManager.GetCarsByColorId(3))
-            //foreach (var product in productManager.GetByUnitPrice(40,100))
+
+
+        }
+
+        private static void EfGetDetailsTest()
+        {
+            Console.WriteLine("-------------Entity Framework Get Details-----------------------");
+            CarManager carManager = new CarManager(new EfCarDal());
+            List<CarDetailDto> carDetails = carManager.GetCarDetails();
+            PrintDetailsTest(carDetails);
+        }
+
+        private static void EfDeleteTest()
+        {
+            Console.WriteLine("-------------Entity Framework Car Delete-----------------------");
+            CarManager carManager = new CarManager(new EfCarDal());
+            Car car = new Car { Id = 7 };
+            carManager.Delete(car); //Only Id is needed
+            List<Car> cars = carManager.GetAll();
+            PrintTest(cars);
+        }
+
+        private static void EfGetByIdTest()
+        {
+            Console.WriteLine("-------------Entity Framework Get By Id-----------------------");
+            CarManager carManager = new CarManager(new EfCarDal());
+            List<Car> cars = new List<Car> { carManager.GetById(3) };
+
+
+            PrintTest(cars);
+        }
+
+        private static void EfUpdateTest()
+        {
+            Console.WriteLine("-------------Entity FrameWork Car Update-----------------------");
+            CarManager carManager = new CarManager(new EfCarDal());
+
+            Car car = new Car { Id = 7, BrandId = 2, ColorId = 2, DailyPrice = 699, ModelYear = 2018, Name = "A4" };
+            carManager.Update(car);
+            List<Car> cars = carManager.GetAll();
+            PrintTest(cars);
+        }
+
+        private static void EfAddTest()
+        {
+            Console.WriteLine("-------------Entity FrameWork Car Add-----------------------");
+            CarManager carManager = new CarManager(new EfCarDal());
+
+            Car car = new Car { Id = 7, BrandId = 2, ColorId = 2, DailyPrice = 500, ModelYear = 2018, Name = "A4" };
+            carManager.Add(car);
+            List<Car> cars = carManager.GetAll();
+            PrintTest(cars);
+            
+        }
+
+        private static void EfGetTest()
+        {
+            Console.WriteLine("-------------Entity FrameWork Car Get-----------------------");
+            CarManager carManager = new CarManager(new EfCarDal());
+            List<Car> cars = carManager.GetAll();
+            PrintTest(cars);
+        }
+
+        private static void InMemoryGetDetailsTest()
+        {
+            Console.WriteLine("-------------InMemory Get Details-----------------------");
+            CarManager carManager = new CarManager(new InMemoryCarDal());
+            List<CarDetailDto> carDetails = carManager.GetCarDetails();
+            PrintDetailsTest(carDetails);
+        }
+
+        private static void PrintDetailsTest(List<CarDetailDto> carDetails)
+        {
+            Console.WriteLine("| Id |     Brand |     Name   |     Color  |   DailyPrice |");
+            foreach (var item in carDetails)
             {
-                Console.WriteLine(car.Name);
+
+                Console.WriteLine("|{0,3} |{1,10} | {2,10} | {3,10} | {4,10}   |",
+                    item.CarId, item.BrandName, item.CarName, item.ColorName, item.DailyPrice);
             }
-            Console.WriteLine("Writing the cars with brand --------------------" + new BrandManager(new EfBrandDal()).GetById(2).Name);
-            foreach (var car in carManager.GetCarsByBrandId(2))
-            //foreach (var product in productManager.GetByUnitPrice(40,100))
+        }
+
+        private static void InMemoryDeleteTest()
+        {
+            Console.WriteLine("-------------InMemory Car Delete-----------------------");
+            CarManager carManager = new CarManager(new InMemoryCarDal());
+            Car car = new Car { Id = 6 };
+            carManager.Delete(car); //Only Id is needed
+            List<Car> cars = carManager.GetAll();
+            PrintTest(cars);
+        }
+
+        private static void InMemoryUpdateTest()
+        {
+            Console.WriteLine("-------------InMemory Car Update-----------------------");
+            CarManager carManager = new CarManager(new InMemoryCarDal());
+            Car car = new Car { Id = 6, BrandId = 2, ColorId = 2, DailyPrice = 500, ModelYear = 2018, Name = "A4" };
+            car.DailyPrice = 699;
+            carManager.Update(car);
+            List<Car> cars = carManager.GetAll();
+            PrintTest(cars);
+        }
+
+        private static void InMemoryGetByIdTest()
+        {
+            Console.WriteLine("-------------InMemory Get By Id-----------------------");
+            CarManager carManager = new CarManager(new InMemoryCarDal());
+            List<Car> cars = new List<Car> { carManager.GetById(3) };
+
+
+            PrintTest(cars);
+        }
+
+        private static void InMemoryAddTest()
+        {
+            Console.WriteLine("-------------InMemory Car Add---------------------------");
+            CarManager carManager = new CarManager(new InMemoryCarDal());
+
+            Car car = new Car { Id = 7, BrandId = 2, ColorId = 2, DailyPrice = 500, ModelYear = 2018, Name = "A4" };
+            carManager.Add(car);
+            List<Car> cars = carManager.GetAll();
+            PrintTest(cars);
+        }
+
+        private static void InMemoryGetTest()
+        {
+            Console.WriteLine("-------------InMemory Get All-----------------------");
+            CarManager carManager = new CarManager(new InMemoryCarDal());
+            List<Car> cars = carManager.GetAll();
+            PrintTest(cars);
+        }
+
+        private static void PrintTest(List<Car> cars)
+        {
+
+            Console.WriteLine("| Id |     Name  | BrandId | ColorId | DailyPrice | ModelYear |");
+            foreach (var item in cars)
             {
-                Console.WriteLine(car.Name);
+                Console.WriteLine("|{0,3} |{1,10} | {2,7} | {3,7} | {4,10} | {5,9} |",
+                    item.Id, item.Name, item.BrandId, item.ColorId, item.DailyPrice, item.ModelYear);
+
             }
-
-
         }
     }
 }

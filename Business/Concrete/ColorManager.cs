@@ -19,16 +19,29 @@ namespace Business.Concrete
 
         public void Add(Color color)
         {
-            if (color.Name.Length >= 2) 
+            var colorExist = GetById(color.Id); //Check if the record exist
+            if (colorExist == null)
             {
-                _colorDal.Add(color);
+                if (color.Name.Length >= 2)
+                {
+                    _colorDal.Add(color);
+                }
+                else Console.WriteLine("Color Name must be at least 2 characters");
             }
-            else Console.WriteLine("Color Name must be at least 2 characters");
+            else Console.WriteLine("Color with Id " + color.Id + " already exist");
         }
 
         public void Delete(Color color)
         {
-            _colorDal.Delete(color);
+            var colorExist = GetById(color.Id); //Check if the record exist
+            if (colorExist != null)
+            {
+                _colorDal.Delete(color);
+            }
+            else
+            {
+                Console.WriteLine("Color with Id " + color.Id + " does not exist");
+            }
         }
 
         public List<Color> GetAll()
@@ -47,7 +60,15 @@ namespace Business.Concrete
 
         public void Update(Color color)
         {
-            _colorDal.Update(color);
+            var colorExist = GetById(color.Id); //Check if the record exist
+            if (colorExist != null)
+            {
+                _colorDal.Update(color);
+            }
+            else
+            {
+                Console.WriteLine("Color with Id " + color.Id + " does not exist");
+            }
         }
     }
 }

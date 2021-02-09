@@ -4,6 +4,8 @@ using Entities.Concrete;
 using Entities.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Business.Concrete
@@ -20,16 +22,29 @@ namespace Business.Concrete
 
         public void Add(Car car)
         {
-            if ((car.Name.Length >= 2) && (car.DailyPrice > 0))
+            var carExist = GetById(car.Id); //Check if the record exist
+            if (carExist == null)
             {
-                _carDal.Add(car);
+                if ((car.Name.Length >= 2) && (car.DailyPrice > 0))
+                {
+                    _carDal.Add(car);
+                }
+                else Console.WriteLine("Car Name must be at least 2 characters and Daily Price must be greater than 0");
             }
-            else Console.WriteLine("Car Name must be at least 2 characters and Daily Price must be greater than 0");
+            else Console.WriteLine("Car with Id "+car.Id+"already exist");
         }
 
         public void Delete(Car car)
         {
-            _carDal.Delete(car);
+            var carExist = GetById(car.Id); //Check if the record exist
+            if (carExist != null)
+            {
+                _carDal.Delete(car);
+            }
+            else
+            {
+                Console.WriteLine("Car with Id " + car.Id + "Does not exist");
+            }
         }
 
         public List<Car> GetAll()
@@ -54,7 +69,15 @@ namespace Business.Concrete
 
         public void Update(Car car)
         {
-            _carDal.Update(car);
+            var carExist = GetById(car.Id); //Check if the record exist
+            if (carExist != null)
+            {
+                _carDal.Update(car);
+            }
+            else
+            {
+                Console.WriteLine("Car with Id " + car.Id + "Does not exist");
+            }
         }
 
         public List<CarDetailDto> GetCarDetails()

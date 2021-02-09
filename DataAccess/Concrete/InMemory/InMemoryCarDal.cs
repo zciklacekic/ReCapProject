@@ -63,12 +63,15 @@ namespace DataAccess.Concrete.InMemory
             Car carToDelete = _cars.SingleOrDefault(c => c.Id == car.Id);
             _cars.Remove(carToDelete);
         }
-        
-        public List<Car> GetAll()
+        public void Update(Car car)
         {
-            return _cars;
+            Car carToUpdate = _cars.SingleOrDefault(c => c.Id == car.Id);
+            carToUpdate.ColorId = car.ColorId;
+            carToUpdate.BrandId = car.BrandId;
+            carToUpdate.ModelYear = car.ModelYear;
+            carToUpdate.DailyPrice = car.DailyPrice;
+            carToUpdate.Name = car.Name;
         }
-
         public List<Car> GetById(int carId)
         {
             return _cars.Where(c=> c.Id==carId).ToList();
@@ -78,15 +81,7 @@ namespace DataAccess.Concrete.InMemory
             return _cars.Where(p => p.BrandId == brandId).ToList();
         }
 
-        public void Update(Car car)
-        {
-            Car carToUpdate= _cars.SingleOrDefault(c=> c.Id==car.Id);
-            carToUpdate.ColorId = car.ColorId;
-            carToUpdate.BrandId = car.BrandId;
-            carToUpdate.ModelYear = car.ModelYear;
-            carToUpdate.DailyPrice = car.DailyPrice;
-            carToUpdate.Name = car.Name;
-        }
+
 
         public List<CarDetailDto> GetCarDetails()
         {
@@ -95,12 +90,14 @@ namespace DataAccess.Concrete.InMemory
 
         public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
         {
-            return _cars;
+            return filter == null
+                    ? _cars.ToList() 
+                    : _cars.Where(filter.Compile()).ToList();
         }
 
         public Car Get(Expression<Func<Car, bool>> filter)
         {
-            throw new NotImplementedException();
+            return _cars.SingleOrDefault(filter.Compile());
         }
     }
 }

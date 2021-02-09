@@ -19,16 +19,29 @@ namespace Business.Concrete
 
         public void Add(Brand brand)
         {
-            if (brand.Name.Length >= 2) 
+            var brandExist = GetById(brand.Id); //Check if the record exist
+            if (brandExist == null)
             {
+                if (brand.Name.Length >= 2) 
+                {
                 _brandDal.Add(brand);
+                }
+                else Console.WriteLine("Brand Name must be at least 2 characters");
             }
-            else Console.WriteLine("Brand Name must be at least 2 characters");
+            else Console.WriteLine("Brand with Id " + brand.Id + " already exist");
         }
 
         public void Delete(Brand brand)
         {
-            _brandDal.Delete(brand);
+            var brandExist = GetById(brand.Id); //Check if the record exist
+            if (brandExist != null)
+            {
+                _brandDal.Delete(brand);
+            }
+            else
+            {
+                Console.WriteLine("Brand with Id " + brand.Id + " does not exist");
+            }
         }
 
         public List<Brand> GetAll()
@@ -45,7 +58,15 @@ namespace Business.Concrete
 
         public void Update(Brand brand)
         {
-            _brandDal.Update(brand);
+            var brandExist = GetById(brand.Id); //Check if the record exist
+            if (brandExist != null)
+            {
+                _brandDal.Update(brand);
+            }
+            else
+            {
+                Console.WriteLine("Brand with Id " + brand.Id + " does not exist");
+            }
         }
     }
 }
