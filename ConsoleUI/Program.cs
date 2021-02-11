@@ -77,7 +77,7 @@ namespace ConsoleUI
         {
             Console.WriteLine("-------------Entity Framework Get Details-----------------------");
             CarManager carManager = new CarManager(new EfCarDal());
-            List<CarDetailDto> carDetails = carManager.GetCarDetails();
+            List<CarDetailDto> carDetails = carManager.GetCarDetails().Data;
             PrintDetailsTest(carDetails);
         }
 
@@ -87,7 +87,7 @@ namespace ConsoleUI
             CarManager carManager = new CarManager(new EfCarDal());
             Car car = new Car { Id = 7 };
             carManager.Delete(car); //Only Id is needed
-            List<Car> cars = carManager.GetAll();
+            List<Car> cars = carManager.GetAll().Data;
             PrintTest(cars);
         }
 
@@ -95,7 +95,7 @@ namespace ConsoleUI
         {
             Console.WriteLine("-------------Entity Framework Get By Id-----------------------");
             CarManager carManager = new CarManager(new EfCarDal());
-            List<Car> cars = new List<Car> { carManager.GetById(3) };
+            List<Car> cars = new List<Car> { carManager.GetById(3).Data };
 
 
             PrintTest(cars);
@@ -108,7 +108,7 @@ namespace ConsoleUI
 
             Car car = new Car { Id = 7, BrandId = 2, ColorId = 2, DailyPrice = 699, ModelYear = 2018, Name = "A4" };
             carManager.Update(car);
-            List<Car> cars = carManager.GetAll();
+            List<Car> cars = carManager.GetAll().Data;
             PrintTest(cars);
         }
 
@@ -119,7 +119,7 @@ namespace ConsoleUI
 
             Car car = new Car { Id = 7, BrandId = 2, ColorId = 2, DailyPrice = 500, ModelYear = 2018, Name = "A4" };
             carManager.Add(car);
-            List<Car> cars = carManager.GetAll();
+            List<Car> cars = carManager.GetAll().Data;
             PrintTest(cars);
             
         }
@@ -128,7 +128,7 @@ namespace ConsoleUI
         {
             Console.WriteLine("-------------Entity FrameWork Car Get-----------------------");
             CarManager carManager = new CarManager(new EfCarDal());
-            List<Car> cars = carManager.GetAll();
+            List<Car> cars = carManager.GetAll().Data;
             PrintTest(cars);
         }
 
@@ -136,7 +136,7 @@ namespace ConsoleUI
         {
             Console.WriteLine("-------------InMemory Get Details-----------------------");
             CarManager carManager = new CarManager(new InMemoryCarDal());
-            List<CarDetailDto> carDetails = carManager.GetCarDetails();
+            List<CarDetailDto> carDetails = carManager.GetCarDetails().Data;
             PrintDetailsTest(carDetails);
         }
 
@@ -157,7 +157,7 @@ namespace ConsoleUI
             CarManager carManager = new CarManager(new InMemoryCarDal());
             Car car = new Car { Id = 6 };
             carManager.Delete(car); //Only Id is needed
-            List<Car> cars = carManager.GetAll();
+            List<Car> cars = carManager.GetAll().Data;
             PrintTest(cars);
         }
 
@@ -168,7 +168,7 @@ namespace ConsoleUI
             Car car = new Car { Id = 6, BrandId = 2, ColorId = 2, DailyPrice = 500, ModelYear = 2018, Name = "A4" };
             car.DailyPrice = 699;
             carManager.Update(car);
-            List<Car> cars = carManager.GetAll();
+            List<Car> cars = carManager.GetAll().Data;
             PrintTest(cars);
         }
 
@@ -176,7 +176,7 @@ namespace ConsoleUI
         {
             Console.WriteLine("-------------InMemory Get By Id-----------------------");
             CarManager carManager = new CarManager(new InMemoryCarDal());
-            List<Car> cars = new List<Car> { carManager.GetById(3) };
+            List<Car> cars = new List<Car> { carManager.GetById(3).Data };
 
 
             PrintTest(cars);
@@ -189,7 +189,7 @@ namespace ConsoleUI
 
             Car car = new Car { Id = 7, BrandId = 2, ColorId = 2, DailyPrice = 500, ModelYear = 2018, Name = "A4" };
             carManager.Add(car);
-            List<Car> cars = carManager.GetAll();
+            List<Car> cars = carManager.GetAll().Data;
             PrintTest(cars);
         }
 
@@ -197,7 +197,7 @@ namespace ConsoleUI
         {
             Console.WriteLine("-------------InMemory Get All-----------------------");
             CarManager carManager = new CarManager(new InMemoryCarDal());
-            List<Car> cars = carManager.GetAll();
+            List<Car> cars = carManager.GetAll().Data;
             PrintTest(cars);
         }
 

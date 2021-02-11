@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -17,56 +19,54 @@ namespace Business.Concrete
             _brandDal = brandDal;
         }
 
-        public void Add(Brand brand)
+        public IResult Add(Brand brand)
         {
             var brandExist = GetById(brand.Id); //Check if the record exist
-            if (brandExist == null)
+            if (brandExist.Data == null)
             {
                 if (brand.Name.Length >= 2) 
                 {
                 _brandDal.Add(brand);
+                return new SuccessResult(Messages.BrandAdded);
                 }
-                else Console.WriteLine("Brand Name must be at least 2 characters");
+                return new ErrorResult(Messages.BrandNameInvalid);
             }
-            else Console.WriteLine("Brand with Id " + brand.Id + " already exist");
+            return new ErrorResult(Messages.BrandExists);
         }
 
-        public void Delete(Brand brand)
+        public IResult Delete(Brand brand)
         {
             var brandExist = GetById(brand.Id); //Check if the record exist
-            if (brandExist != null)
+            if (brandExist.Data != null)
             {
                 _brandDal.Delete(brand);
+                return new SuccessResult(Messages.BrandDeleted);
             }
-            else
-            {
-                Console.WriteLine("Brand with Id " + brand.Id + " does not exist");
-            }
+            return new ErrorResult(Messages.BrandNotFound);
         }
 
-        public List<Brand> GetAll()
+        public IDataResult<List<Brand>> GetAll()
         {
 
-            return _brandDal.GetAll(); 
+            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(), Messages.BrandListed);  
         }
 
 
-        public Brand GetById(int Id)
+        public IDataResult<Brand> GetById(int Id)
         {
-            return _brandDal.Get(p => p.Id == Id);
+            return new SuccessDataResult<Brand>(_brandDal.Get(p => p.Id == Id), Messages.BrandListed);
         }
 
-        public void Update(Brand brand)
+        public IResult Update(Brand brand)
         {
             var brandExist = GetById(brand.Id); //Check if the record exist
-            if (brandExist != null)
+            if (brandExist.Data != null)
             {
                 _brandDal.Update(brand);
+                return new SuccessResult(Messages.BrandDeleted);
             }
-            else
-            {
-                Console.WriteLine("Brand with Id " + brand.Id + " does not exist");
-            }
+            return new ErrorResult(Messages.BrandNotFound);
+            
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -17,58 +19,55 @@ namespace Business.Concrete
             _colorDal = colorDal;
         }
 
-        public void Add(Color color)
+        public IResult Add(Color color)
         {
             var colorExist = GetById(color.Id); //Check if the record exist
-            if (colorExist == null)
+            if (colorExist.Data == null)
             {
                 if (color.Name.Length >= 2)
                 {
                     _colorDal.Add(color);
+                    return new SuccessResult(Messages.ColorAdded);
                 }
-                else Console.WriteLine("Color Name must be at least 2 characters");
+                return new ErrorResult(Messages.ColorNameInvalid);
             }
-            else Console.WriteLine("Color with Id " + color.Id + " already exist");
+            return new ErrorResult(Messages.ColorExists);
         }
 
-        public void Delete(Color color)
+        public IResult Delete(Color color)
         {
             var colorExist = GetById(color.Id); //Check if the record exist
-            if (colorExist != null)
+            if (colorExist.Data != null)
             {
                 _colorDal.Delete(color);
+                return new SuccessResult(Messages.ColorDeleted);
             }
-            else
-            {
-                Console.WriteLine("Color with Id " + color.Id + " does not exist");
-            }
+            return new ErrorResult(Messages.ColorNotFound);
         }
 
-        public List<Color> GetAll()
+        public IDataResult<List<Color>> GetAll()
         {
             //Is Kodları
             //Yetki ve is kontrolleri yapıldıktan sonra aşağıdaki kodlar çalışacak
 
-            return _colorDal.GetAll(); 
+            return new SuccessDataResult<List<Color>>(_colorDal.GetAll(),Messages.ColorListed); 
         }
 
 
-        public Color GetById(int Id)
+        public IDataResult<Color> GetById(int Id)
         {
-            return _colorDal.Get(p => p.Id == Id);
+            return new SuccessDataResult<Color>(_colorDal.Get(p => p.Id == Id),Messages.ColorListed);
         }
 
-        public void Update(Color color)
+        public IResult Update(Color color)
         {
             var colorExist = GetById(color.Id); //Check if the record exist
-            if (colorExist != null)
+            if (colorExist.Data != null)
             {
                 _colorDal.Update(color);
+                return new SuccessResult(Messages.ColorUpdated);
             }
-            else
-            {
-                Console.WriteLine("Color with Id " + color.Id + " does not exist");
-            }
+            return new ErrorResult(Messages.ColorNotFound);
         }
     }
 }

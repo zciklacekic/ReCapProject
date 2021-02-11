@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
@@ -20,69 +22,68 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public void Add(Car car)
+        public IResult Add(Car car)
         {
             var carExist = GetById(car.Id); //Check if the record exist
-            if (carExist == null)
+            if (carExist.Data == null)
             {
                 if ((car.Name.Length >= 2) && (car.DailyPrice > 0))
                 {
                     _carDal.Add(car);
+                    return new SuccessResult(Messages.CarAdded);
                 }
-                else Console.WriteLine("Car Name must be at least 2 characters and Daily Price must be greater than 0");
+                return new ErrorResult(Messages.CarNameInvalid);
             }
-            else Console.WriteLine("Car with Id "+car.Id+"already exist");
+            return new ErrorResult(Messages.CarExists);
         }
 
-        public void Delete(Car car)
+        public IResult Delete(Car car)
         {
             var carExist = GetById(car.Id); //Check if the record exist
-            if (carExist != null)
+            if (carExist.Data != null)
             {
                 _carDal.Delete(car);
+                return new SuccessResult(Messages.CarDeleted);
             }
-            else
-            {
-                Console.WriteLine("Car with Id " + car.Id + "Does not exist");
-            }
+            return new SuccessResult(Messages.CarNotFound);
+
         }
 
-        public List<Car> GetAll()
+        public IDataResult<List<Car>> GetAll()
         {
-             return _carDal.GetAll();
+             return new SuccessDataResult<List<Car>>(_carDal.GetAll(),Messages.CarListed);
         }
 
-        public List<Car> GetCarsByBrandId(int id)
+        public IDataResult<List<Car>> GetCarsByBrandId(int id)
         {
-            return _carDal.GetAll(p => p.BrandId == id);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.BrandId == id),Messages.CarListed);
         }
 
-        public List<Car> GetCarsByColorId(int id)
+        public IDataResult<List<Car>> GetCarsByColorId(int id)
         {
-            return _carDal.GetAll(p => p.ColorId == id);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.ColorId == id), Messages.CarListed);
         }
 
-        public Car GetById(int Id)
+        public IDataResult<Car> GetById(int Id)
         {
-            return _carDal.Get(p => p.Id == Id);
+            return new SuccessDataResult<Car>(_carDal.Get(p => p.Id == Id),Messages.CarListed);
         }
 
-        public void Update(Car car)
+        public IResult Update(Car car)
         {
             var carExist = GetById(car.Id); //Check if the record exist
-            if (carExist != null)
+            if (carExist.Data != null)
             {
                 _carDal.Update(car);
+                return new SuccessResult(Messages.CarUpdated);
             }
-            else
-            {
-                Console.WriteLine("Car with Id " + car.Id + "Does not exist");
-            }
+
+            return new ErrorResult(Messages.CarNotFound);
         }
 
-        public List<CarDetailDto> GetCarDetails()
+        public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
-            return _carDal.GetCarDetails();
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(),Messages.CarListed);
         }
     }
 }
