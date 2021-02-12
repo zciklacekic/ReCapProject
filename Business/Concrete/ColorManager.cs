@@ -21,8 +21,7 @@ namespace Business.Concrete
 
         public IResult Add(Color color)
         {
-            var colorExist = GetById(color.Id); //Check if the record exist
-            if (colorExist.Data == null)
+            if (!IsExist(color.Id).Success)
             {
                 if (color.Name.Length >= 2)
                 {
@@ -36,8 +35,7 @@ namespace Business.Concrete
 
         public IResult Delete(Color color)
         {
-            var colorExist = GetById(color.Id); //Check if the record exist
-            if (colorExist.Data != null)
+            if (IsExist(color.Id).Success)
             {
                 _colorDal.Delete(color);
                 return new SuccessResult(Messages.ColorDeleted);
@@ -59,10 +57,19 @@ namespace Business.Concrete
             return new SuccessDataResult<Color>(_colorDal.Get(p => p.Id == Id),Messages.ColorListed);
         }
 
+        public IResult IsExist(int colorId)
+        {
+            var colorExist = GetById(colorId);
+            if (colorExist.Data != null)
+            {
+                return new SuccessResult(Messages.ColorExists);
+            }
+            return new ErrorResult(Messages.ColorNotFound);
+        }
+
         public IResult Update(Color color)
         {
-            var colorExist = GetById(color.Id); //Check if the record exist
-            if (colorExist.Data != null)
+            if (IsExist(color.Id).Success)
             {
                 _colorDal.Update(color);
                 return new SuccessResult(Messages.ColorUpdated);

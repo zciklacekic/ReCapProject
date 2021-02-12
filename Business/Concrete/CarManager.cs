@@ -24,8 +24,7 @@ namespace Business.Concrete
 
         public IResult Add(Car car)
         {
-            var carExist = GetById(car.Id); //Check if the record exist
-            if (carExist.Data == null)
+            if (IsExist(car.Id).Success)
             {
                 if ((car.Name.Length >= 2) && (car.DailyPrice > 0))
                 {
@@ -39,8 +38,7 @@ namespace Business.Concrete
 
         public IResult Delete(Car car)
         {
-            var carExist = GetById(car.Id); //Check if the record exist
-            if (carExist.Data != null)
+            if (IsExist(car.Id).Success)
             {
                 _carDal.Delete(car);
                 return new SuccessResult(Messages.CarDeleted);
@@ -71,8 +69,7 @@ namespace Business.Concrete
 
         public IResult Update(Car car)
         {
-            var carExist = GetById(car.Id); //Check if the record exist
-            if (carExist.Data != null)
+            if (IsExist(car.Id).Success)
             {
                 _carDal.Update(car);
                 return new SuccessResult(Messages.CarUpdated);
@@ -84,6 +81,16 @@ namespace Business.Concrete
         public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(),Messages.CarListed);
+        }
+
+        public IResult IsExist(int carId)
+        {
+            var carExist = GetById(carId);
+            if (carExist.Data != null)
+            {
+                return new SuccessResult(Messages.CarExists);
+            }
+            return new ErrorResult(Messages.CarNotFound);
         }
     }
 }

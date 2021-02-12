@@ -21,8 +21,7 @@ namespace Business.Concrete
 
         public IResult Add(Brand brand)
         {
-            var brandExist = GetById(brand.Id); //Check if the record exist
-            if (brandExist.Data == null)
+            if (!IsExist(brand.Id).Success)
             {
                 if (brand.Name.Length >= 2) 
                 {
@@ -36,8 +35,7 @@ namespace Business.Concrete
 
         public IResult Delete(Brand brand)
         {
-            var brandExist = GetById(brand.Id); //Check if the record exist
-            if (brandExist.Data != null)
+            if (IsExist(brand.Id).Success)
             {
                 _brandDal.Delete(brand);
                 return new SuccessResult(Messages.BrandDeleted);
@@ -57,13 +55,24 @@ namespace Business.Concrete
             return new SuccessDataResult<Brand>(_brandDal.Get(p => p.Id == Id), Messages.BrandListed);
         }
 
-        public IResult Update(Brand brand)
+        public IResult IsExist(int brandId)
         {
-            var brandExist = GetById(brand.Id); //Check if the record exist
+            var brandExist = GetById(brandId);
             if (brandExist.Data != null)
             {
+                return new SuccessResult(Messages.BrandExists);
+            }
+            return new ErrorResult(Messages.BrandNotFound);
+        }
+
+        public IResult Update(Brand brand)
+        {
+            
+            //var brandExist = GetById(brand.Id); //Check if the record exist
+            if (IsExist(brand.Id).Success)
+            {
                 _brandDal.Update(brand);
-                return new SuccessResult(Messages.BrandDeleted);
+                return new SuccessResult(Messages.BrandUpdated);
             }
             return new ErrorResult(Messages.BrandNotFound);
             

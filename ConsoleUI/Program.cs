@@ -5,6 +5,7 @@ using Entities.Concrete;
 using Entities.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 
 namespace ConsoleUI
 {
@@ -68,9 +69,76 @@ namespace ConsoleUI
             //}
             // ----------------------------------------Color And Brand Creation-----------------------------------------
             //Change Add to Delete or Update to delete or update color and brands
+            // ----------------------------------------User And Customer Creation-----------------------------------------
+            List<User> users = new List<User> {
+            new User{Id=1,FirstName="Zafer",LastName="Çıklaçekiç",Email="zafer@ciklacekic.info",Password="1234"},
+            new User{Id=2,FirstName="Recep",LastName="Göksu",Email="recep@goksu.info",Password="1234"},
+            new User{Id=3,FirstName="Hüseyin",LastName="Cimşir",Email="huseyin@cimsir.info",Password="1234"}
+            };
+            List<Customer> customers = new List<Customer> {
+            new Customer{Id=1,UserId=1,CompanyName="Çıklaçekiç A.Ş."},
+            new Customer{Id=2,UserId=2,CompanyName="Göksu A.Ş."},
+            new Customer{Id=3,UserId=3,CompanyName="Cimşir A.Ş."}
+            };
+            //CustomerAddTest(customers);
+            //UserAddTest(users);
+            //DateTime? nullDateTime=null;
+            List<Rental> rentals = new List<Rental> {
+            new Rental{Id=1,CustomerId=1,CarId=4,RentDate=DateTime.Now,ReturnDate =DateTime.MinValue},
+            new Rental{Id=2,CustomerId=2,CarId=3,RentDate=DateTime.Now.AddDays(-2),ReturnDate=DateTime.MinValue},
+            new Rental{Id=3,CustomerId=3,CarId=4,RentDate=DateTime.Now.AddDays(-10),ReturnDate=DateTime.MinValue},
+            new Rental{Id=4,CustomerId=3,CarId=4,RentDate=DateTime.Now.AddDays(-10),ReturnDate=DateTime.MinValue},
+            };
+            //RentalAddTest(rentals);
+            //Rental rental = new Rental { Id = 1, CustomerId = 2 };
+            //RentalUpdateTest(rental);
+            //Rental rental = new Rental { Id = 1 };
+            //RentalEndTest(rental);
 
+        }
 
+        private static void RentalEndTest(Rental rental)
+        {
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            var result = rentalManager.EndRental(rental);
+            Console.WriteLine("{0,3} | {1,3} | {2,3} | {3,40} |", rental.Id, rental.CarId, rental.CustomerId, result.Message);
+        }
 
+        private static void RentalUpdateTest(Rental rental)
+        {
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            var result = rentalManager.Update(rental);
+            Console.WriteLine("{0,3} | {1,3} | {2,3} | {3,40} |", rental.Id, rental.CarId, rental.CustomerId, result.Message);
+        }
+
+        private static void RentalAddTest(List<Rental> rentals)
+        {
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            foreach (var rental in rentals)
+            {
+                var result = rentalManager.Add(rental);
+                Console.WriteLine("{0,3} | {1,3} | {2,3} | {3,40} |", rental.Id, rental.CarId, rental.CustomerId, result.Message);
+            }
+        }
+
+        private static void CustomerAddTest(List<Customer> customers)
+        {
+            CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
+            foreach (var customer in customers)
+            {
+                var result = customerManager.Add(customer);
+                Console.WriteLine("{0,3} | {1,3} | {2,20} | {3,40} |", customer.Id, customer.UserId, customer.CompanyName, result.Message);
+            }
+        }
+
+        private static void UserAddTest(List<User> users)
+        {
+            UserManager userManager = new UserManager(new EfUserDal());
+            foreach (var user in users)
+            {
+                var result=userManager.Add(user);
+                Console.WriteLine("{0,3} | {1,10} | {2,20} | {3,40} |",user.Id,user.FirstName,user.LastName, result.Message);
+            }
         }
 
         private static void EfGetDetailsTest()
