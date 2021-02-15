@@ -24,7 +24,7 @@ namespace Business.Concrete
 
         public IResult Add(Car car)
         {
-            if (IsExist(car.Id).Success)
+            if (!IsExist(car.Id).Success)
             {
                 if ((car.Name.Length >= 2) && (car.DailyPrice > 0))
                 {
