@@ -15,8 +15,6 @@ namespace Business.Abstract
         IResult Delete(Rental rental);
         IResult Update(Rental rental);
         IResult EndRental(Rental rental);
-        IResult IsExist(int rentalId);
-        IResult IsOnRent(int carId);
     }
 
 }

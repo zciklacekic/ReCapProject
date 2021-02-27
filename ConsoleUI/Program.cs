@@ -94,7 +94,17 @@ namespace ConsoleUI
             //RentalUpdateTest(rental);
             //Rental rental = new Rental { Id = 1 };
             //RentalEndTest(rental);
-
+            CarImage carImage = new CarImage
+            {
+                Id = 1,
+                CarId = 1,
+                ImagePath = @"c:\sources\images\birinci.ikinci.ucuncu.jpg",
+                Date = DateTime.Now
+            };
+            string[] fileSplit = carImage.ImagePath.Split('.');
+            var extensionOfFile = "."+ fileSplit[fileSplit.Length - 1];
+            var newPathName = Guid.NewGuid().ToString() + extensionOfFile;
+            Console.WriteLine(newPathName);
         }
 
         private static void RentalEndTest(Rental rental)

@@ -64,7 +64,6 @@ namespace Business.Concrete
                 }
             }
             return new ErrorResult(Messages.RentalNotFound);
-
         }
 
         public IDataResult<List<Rental>> GetAll()
@@ -72,42 +71,9 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(), Messages.RentalListed);  
         }
 
-
         public IDataResult<Rental> GetById(int Id)
         {
             return new SuccessDataResult<Rental>(_rentalDal.Get(p => p.Id == Id), Messages.RentalListed);
-        }
-
-        public IResult IsExist(int rentalId)
-        {
-            var rentalExist = GetById(rentalId);
-            if (rentalExist.Data != null)
-            {
-                return new SuccessResult(Messages.RentalExists);
-            }
-            return new ErrorResult(Messages.RentalNotFound);
-        }
-
-        public IResult IsOnRent(int carId)
-        {
-            var isOnRent = false;
-            //List<Rental> rentalByCarId = new List<Rental>(_rentalDal.GetAll(p => p.CarId == carId));
-            var rentalByCarId = new List<Rental>(_rentalDal.GetAll(p => p.CarId == carId));
-            if (rentalByCarId.Count>0)
-            {
-            foreach (var rental in rentalByCarId)
-                {
-                if (rental.ReturnDate == DateTime.MinValue)
-                    {
-                    isOnRent = true;
-                    }
-                }
-            }
-            if (isOnRent)
-            {
-                return new SuccessResult(Messages.RentalIsOnRent);
-            }
-            return new ErrorResult();
         }
 
         public IResult Update(Rental rental)
@@ -133,6 +99,37 @@ namespace Business.Concrete
             }
             return new ErrorResult(Messages.RentalNotFound);
             
+        }
+        private IResult IsExist(int rentalId)
+        {
+            var rentalExist = GetById(rentalId);
+            if (rentalExist.Data != null)
+            {
+                return new SuccessResult(Messages.RentalExists);
+            }
+            return new ErrorResult(Messages.RentalNotFound);
+        }
+
+        private IResult IsOnRent(int carId)
+        {
+            var isOnRent = false;
+            //List<Rental> rentalByCarId = new List<Rental>(_rentalDal.GetAll(p => p.CarId == carId));
+            var rentalByCarId = new List<Rental>(_rentalDal.GetAll(p => p.CarId == carId));
+            if (rentalByCarId.Count > 0)
+            {
+                foreach (var rental in rentalByCarId)
+                {
+                    if (rental.ReturnDate == DateTime.MinValue)
+                    {
+                        isOnRent = true;
+                    }
+                }
+            }
+            if (isOnRent)
+            {
+                return new SuccessResult(Messages.RentalIsOnRent);
+            }
+            return new ErrorResult();
         }
     }
 }

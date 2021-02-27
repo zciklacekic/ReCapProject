@@ -2,6 +2,7 @@
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -23,32 +24,30 @@ namespace Business.Concrete
         [ValidationAspect(typeof(UserValidator))]
         public IResult Add(User user)
         {
-            if (!IsExist(user.Id).Success)
+            var result = BusinessRules.Run(IsExist(user.Id));
+            if (result == null)
             {
-                //if (user.LastName.Length >= 2) 
-                //{
-                    _userDal.Add(user);
-                return new SuccessResult(Messages.UserAdded);
-                //}
-                //return new ErrorResult(Messages.UserNameInvalid);
+                return result;
             }
-            return new ErrorResult(Messages.UserExists);
+            _userDal.Add(user);
+            return new SuccessResult(Messages.UserAdded);
         }
 
         public IResult Delete(User user)
         {
-            if (IsExist(user.Id).Success)
+            var result = BusinessRules.Run(IsExist(user.Id));
+            if (result != null)
             {
-                _userDal.Delete(user);
-                return new SuccessResult(Messages.UserDeleted);
+                return result;
             }
-            return new ErrorResult(Messages.UserNotFound);
+            _userDal.Delete(user);
+            return new SuccessResult(Messages.UserDeleted);
         }
 
         public IDataResult<List<User>> GetAll()
         {
 
-            return new SuccessDataResult<List<User>>(_userDal.GetAll(), Messages.UserListed);  
+            return new SuccessDataResult<List<User>>(_userDal.GetAll(), Messages.UserListed);
         }
 
 
@@ -57,7 +56,17 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(_userDal.Get(p => p.Id == Id), Messages.UserListed);
         }
 
-        public IResult IsExist(int userId)
+        public IResult Update(User user)
+        {
+            var result = BusinessRules.Run(IsExist(user.Id));
+            if (result != null)
+            {
+                return result;
+            }
+            _userDal.Update(user);
+            return new SuccessResult(Messages.UserUpdated);
+        }
+        private IResult IsExist(int userId)
         {
             var userExist = GetById(userId);
             if (userExist.Data != null)
@@ -65,17 +74,6 @@ namespace Business.Concrete
                 return new SuccessResult(Messages.UserExists);
             }
             return new ErrorResult(Messages.UserNotFound);
-        }
-
-        public IResult Update(User user)
-        {
-            if (IsExist(user.Id).Success)
-            {
-                _userDal.Update(user);
-                return new SuccessResult(Messages.UserUpdated);
-            }
-            return new ErrorResult(Messages.UserNotFound);
-            
         }
     }
 }
