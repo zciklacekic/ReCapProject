@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Core.Entities.Concrete;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Business.Constants
@@ -57,5 +59,12 @@ namespace Business.Constants
         public static string MaintenanceTime = "Sistem bakımı var";
         public static string MaxCarImageCountLimit = "Bir aracın en fazla 5 resmi olabilir";
         public static string CarImageListed = "Resim(ler) listelendi";
+        public static string CarImageFileNameChanged = "Resim ismi GUID ile değiştirildi";
+        public static string AuthorizationDenied = "Yetki Reddedildi";
+        public static string UserRegistered ="Kullanıcı kayıt edildi.";
+        public static string PasswordError = "Şifre Hatalı.";
+        public static string SuccessfulLogin = "Başarılı giriş.";
+        public static string UserAlreadyExists = "Kullanıcı zaten var.";
+        public static string AccessTokenCreated = "Access Token Oluşturuldu.";
     }
 }

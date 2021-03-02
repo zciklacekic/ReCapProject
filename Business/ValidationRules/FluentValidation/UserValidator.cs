@@ -1,4 +1,5 @@
-﻿using Entities.Concrete;
+﻿using Core.Entities.Concrete;
+using Entities.Concrete;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,9 @@ namespace Business.ValidationRules.FluentValidation
             RuleFor(p => p.LastName).MinimumLength(2);
             RuleFor(p => p.Email).NotEmpty();
             RuleFor(p => p.Email).EmailAddress();
-            RuleFor(p => p.Password).NotEmpty();
-            RuleFor(p => p.Password).MinimumLength(8);
+            RuleFor(p => p.PasswordHash).NotEmpty();
+            RuleFor(p => p.PasswordSalt).NotEmpty();
+            RuleFor(p => p.Status).NotEmpty();
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Business.Concrete
                 Directory.CreateDirectory(path);
             }
 
-            string newImageFileName = RenameFileToGuid(file);
+            string newImageFileName = RenameFileToGuid(file).Data;
 
             carImage.ImagePath = newImageFileName;
             carImage.Date = DateTime.Now;
@@ -59,7 +59,7 @@ namespace Business.Concrete
 
         }
 
-        private static string RenameFileToGuid(FileOperation file)
+        private static IDataResult<string> RenameFileToGuid(FileOperation file)
         {
             string[] fileNameSplit = file.files.FileName.Split('.');
             var extensionOfFile = "." + fileNameSplit[fileNameSplit.Length - 1];
@@ -68,7 +68,7 @@ namespace Business.Concrete
                 DateTime.Now.Month.ToString() + "_" +
                 DateTime.Now.Year.ToString() + "_" +
                 Guid.NewGuid().ToString() + extensionOfFile;
-            return result;
+            return new SuccessDataResult<string>(result,Messages.CarImageFileNameChanged);
         }
 
         public IResult Delete(string path, CarImage carImage)
@@ -124,7 +124,7 @@ namespace Business.Concrete
             }
             var carImageToUpdate = _carImageDal.Get(p => p.Id == carImage.Id);
             DeleteImage(path + carImageToUpdate.ImagePath);
-            string newImageFileName = RenameFileToGuid(file);
+            string newImageFileName = RenameFileToGuid(file).Data;
             carImage.ImagePath = newImageFileName;
             carImage.Date = DateTime.Now;
             UploadImage(file, path, newImageFileName);

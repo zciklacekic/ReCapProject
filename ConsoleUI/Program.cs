@@ -1,4 +1,5 @@
 ﻿using Business.Concrete;
+using Core.Entities.Concrete;
 using DataAccess.Concrete.EntityFrameWork;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
@@ -70,11 +71,11 @@ namespace ConsoleUI
             // ----------------------------------------Color And Brand Creation-----------------------------------------
             //Change Add to Delete or Update to delete or update color and brands
             // ----------------------------------------User And Customer Creation-----------------------------------------
-            List<User> users = new List<User> {
-            new User{Id=1,FirstName="Zafer",LastName="Çıklaçekiç",Email="zafer@ciklacekic.info",Password="1234"},
-            new User{Id=2,FirstName="Recep",LastName="Göksu",Email="recep@goksu.info",Password="1234"},
-            new User{Id=3,FirstName="Hüseyin",LastName="Cimşir",Email="huseyin@cimsir.info",Password="1234"}
-            };
+            //List<User> users = new List<User> {
+            //new User{Id=1,FirstName="Zafer",LastName="Çıklaçekiç",Email="zafer@ciklacekic.info",Password="1234"},
+            //new User{Id=2,FirstName="Recep",LastName="Göksu",Email="recep@goksu.info",Password="1234"},
+            //new User{Id=3,FirstName="Hüseyin",LastName="Cimşir",Email="huseyin@cimsir.info",Password="1234"}
+            //};
             List<Customer> customers = new List<Customer> {
             new Customer{Id=1,UserId=1,CompanyName="Çıklaçekiç A.Ş."},
             new Customer{Id=2,UserId=2,CompanyName="Göksu A.Ş."},
