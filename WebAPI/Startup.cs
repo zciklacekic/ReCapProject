@@ -57,7 +57,7 @@ namespace WebAPI
                     };
                 });
 
-            ServiceTool.Create(services);
+            //ServiceTool.Create(services);
 
             services.AddDependencyResolvers(new ICoreModule[]
             {

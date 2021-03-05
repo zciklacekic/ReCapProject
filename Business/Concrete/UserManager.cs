@@ -48,7 +48,6 @@ namespace Business.Concrete
             return new SuccessDataResult<List<User>>(_userDal.GetAll(), Messages.UserListed);
         }
 
-
         public IDataResult<User> GetById(int Id)
         {
             return new SuccessDataResult<User>(_userDal.Get(p => p.Id == Id), Messages.UserListed);
@@ -74,25 +73,10 @@ namespace Business.Concrete
             return new ErrorResult(Messages.UserNotFound);
         }
 
-        //public class UserManager : IUserService
-        //{
-        //    IUserDal _userDal;
-
-        //    public UserManager(IUserDal userDal)
-        //    {
-        //        _userDal = userDal;
-        //    }
-
         public IDataResult<List<OperationClaim>> GetClaims(User user)
             {
                 return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));
             }
-
-        //public void Add(User user)
-        //{
-        //    _userDal.Add(user);
-        //}
-
 
         //Refactored
         public IDataResult<User> GetByMail(string email)

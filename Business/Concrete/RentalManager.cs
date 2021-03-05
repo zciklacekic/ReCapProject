@@ -113,7 +113,6 @@ namespace Business.Concrete
         private IResult IsOnRent(int carId)
         {
             var isOnRent = false;
-            //List<Rental> rentalByCarId = new List<Rental>(_rentalDal.GetAll(p => p.CarId == carId));
             var rentalByCarId = new List<Rental>(_rentalDal.GetAll(p => p.CarId == carId));
             if (rentalByCarId.Count > 0)
             {

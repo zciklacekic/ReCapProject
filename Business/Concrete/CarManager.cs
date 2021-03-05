@@ -2,7 +2,12 @@
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Logging;
+using Core.Aspects.Autofac.Performance;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -12,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 
 namespace Business.Concrete
 {
@@ -26,6 +32,7 @@ namespace Business.Concrete
         }
         [SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
         {
             if (!IsExist(car.Id).Success)
@@ -36,6 +43,7 @@ namespace Business.Concrete
             return new ErrorResult(Messages.CarExists);
         }
 
+        [SecuredOperation("car.delete,admin")]
         public IResult Delete(Car car)
         {
             if (IsExist(car.Id).Success)
@@ -46,9 +54,13 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarNotFound);
 
         }
-
+        [SecuredOperation("car.list,admin")]
+        [PerformanceAspect(5)]
+        [LogAspect(typeof(FileLogger))]
+        [CacheAspect(duration: 10)]
         public IDataResult<List<Car>> GetAll()
         {
+            Thread.Sleep(5000);
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarListed);
         }
 
@@ -91,6 +103,13 @@ namespace Business.Concrete
                 return new SuccessResult(Messages.CarExists);
             }
             return new ErrorResult(Messages.CarNotFound);
+        }
+        [TransactionScopeAspect]
+        public IResult TransactionalOperation(Car car)
+        {
+            _carDal.Update(car);
+            _carDal.Add(car);
+            return new SuccessResult(Messages.CarUpdated);
         }
     }
 }
